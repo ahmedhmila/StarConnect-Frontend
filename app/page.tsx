@@ -6,6 +6,7 @@ import SocialFeed from "@/components/SocialFeed";
 import Footer from "@/components/Footer";
 import Tracker from "@/components/Tracker";
 import ServiceGrid from "@/components/ServiceGrid";
+import ProjectTracker from "@/components/ProjectTracker";
 import CitizenVoice from "@/components/CitizenVoice";
 import { Twitter, Facebook, Linkedin, Lock, MessageCircle, Heart, MapPin } from "lucide-react";
 
@@ -60,6 +61,9 @@ export default async function Home() {
 
       {/* E-SERVICES */}
       <ServiceGrid />
+
+      {/* PROJECTS TRACKER - TRANSPARENCY */}
+      <ProjectTracker />
 
       {/* MAIN CONTENT */}
       <section className="container mx-auto px-6 py-20" id="news">

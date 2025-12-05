@@ -1,11 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  /* Define Custom Colors */
-  --color-official-blue: #003366;
-  --color-official-gold: #D4AF37;
-  --color-official-red: #8B0000;
-  --color-official-gray: #F5F5F5;
+  /* Cameroon Official Colors */
+  --color-official-green: #007A5E;
+  --color-official-red: #CE1126;
+  --color-official-yellow: #FCD116;
+  --color-official-blue: #003366; /* Kept for secondary/police use */
+  --color-official-gold: #D4AF37; /* Kept for luxury/vip */
+  --color-official-dark: #1A1A1A;
+  --color-official-light: #F9FAFB;
 
   /* Define Fonts */
   --font-serif: var(--font-serif);
