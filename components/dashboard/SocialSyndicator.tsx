@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Send, Image as ImageIcon, Video, Hash, Globe, CheckCircle2 } from 'lucide-react';
+import { Send, Image as ImageIcon, Video, Hash, Globe, CheckCircle2, Upload } from 'lucide-react';
 
 export default function SocialSyndicator() {
   const [content, setContent] = useState('');
@@ -9,21 +9,48 @@ export default function SocialSyndicator() {
     twitter: true,
     facebook: false,
     tiktok: false,
-    instagram: false
+    instagram: false,
+    fanfeed: true // New option
   });
   const [isPosting, setIsPosting] = useState(false);
   const [posted, setPosted] = useState(false);
+  const [media, setMedia] = useState<string | null>(null);
 
   const handlePost = async () => {
     setIsPosting(true);
+    
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // If posting to Fan Feed, store in localStorage for demo
+    if (platforms.fanfeed) {
+      const newPost = {
+        id: Date.now(),
+        content,
+        media,
+        timestamp: new Date().toISOString(),
+        author: "Cameron (Official)"
+      };
+      
+      const existing = JSON.parse(localStorage.getItem('fan_feed_posts') || '[]');
+      localStorage.setItem('fan_feed_posts', JSON.stringify([newPost, ...existing]));
+      
+      // Dispatch event so other components can update
+      window.dispatchEvent(new Event('feedUpdated'));
+    }
+
     setIsPosting(false);
     setPosted(true);
     setTimeout(() => {
       setPosted(false);
       setContent('');
+      setMedia(null);
     }, 3000);
+  };
+
+  const handleMediaUpload = () => {
+    // Simulate upload
+    setMedia("uploaded");
   };
 
   return (
@@ -31,15 +58,16 @@ export default function SocialSyndicator() {
       <div className="p-6 border-b border-zinc-800">
         <h2 className="text-xl font-bold text-white flex items-center gap-2">
           <Globe className="w-5 h-5 text-amber-500" />
-          Social Syndication
+          Social Syndication & Feed
         </h2>
-        <p className="text-zinc-400 text-sm mt-1">Broadcast your message across the multiverse.</p>
+        <p className="text-zinc-400 text-sm mt-1">Broadcast to the world and your inner circle.</p>
       </div>
 
       <div className="p-6 space-y-6">
         {/* Platform Selection */}
         <div className="flex flex-wrap gap-3">
           {[
+            { id: 'fanfeed', label: 'Fan Feed (App)', color: 'peer-checked:bg-amber-600 peer-checked:text-white' },
             { id: 'twitter', label: 'X (Twitter)', color: 'peer-checked:bg-black' },
             { id: 'facebook', label: 'Facebook', color: 'peer-checked:bg-blue-600' },
             { id: 'instagram', label: 'Instagram', color: 'peer-checked:bg-pink-600' },
@@ -72,11 +100,28 @@ export default function SocialSyndicator() {
           </div>
         </div>
 
+        {/* Media Preview */}
+        {media && (
+          <div className="bg-zinc-800/50 rounded-lg p-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-zinc-700 rounded flex items-center justify-center">
+                <ImageIcon className="w-5 h-5 text-zinc-400" />
+              </div>
+              <span className="text-sm text-zinc-300">media_upload_v1.jpg</span>
+            </div>
+            <button onClick={() => setMedia(null)} className="text-zinc-500 hover:text-red-400">Remove</button>
+          </div>
+        )}
+
         {/* Actions */}
         <div className="flex justify-between items-center">
           <div className="flex gap-2">
-            <button className="p-2 text-zinc-400 hover:text-amber-500 hover:bg-amber-500/10 rounded-lg transition-colors">
+            <button 
+              onClick={handleMediaUpload}
+              className="p-2 text-zinc-400 hover:text-amber-500 hover:bg-amber-500/10 rounded-lg transition-colors relative group"
+            >
               <ImageIcon className="w-5 h-5" />
+              <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Add Photo</span>
             </button>
             <button className="p-2 text-zinc-400 hover:text-amber-500 hover:bg-amber-500/10 rounded-lg transition-colors">
               <Video className="w-5 h-5" />

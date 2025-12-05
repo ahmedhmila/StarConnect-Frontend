@@ -54,12 +54,12 @@ export default async function Home() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-official-gold text-official-dark px-8 py-4 rounded-lg font-bold text-lg hover:bg-white transition-colors shadow-lg">
+              <a href="#shop" className="bg-official-gold text-official-dark px-8 py-4 rounded-lg font-bold text-lg hover:bg-white transition-colors shadow-lg text-center">
                 Get Merch
-              </button>
-              <button className="border-2 border-white/30 bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white/20 transition-colors">
+              </a>
+              <a href="#news" className="border-2 border-white/30 bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white/20 transition-colors text-center">
                 Tour Dates
-              </button>
+              </a>
             </div>
           </div>
         </div>
