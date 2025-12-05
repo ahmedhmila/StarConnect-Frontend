@@ -1,29 +1,19 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Define Custom Colors */
+  --color-official-blue: #003366;
+  --color-official-gold: #D4AF37;
+  --color-official-red: #8B0000;
+  --color-official-gray: #F5F5F5;
+
+  /* Define Fonts */
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-inter);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Apply base styles */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-gray-50);
+  color: var(--color-gray-900);
 }
