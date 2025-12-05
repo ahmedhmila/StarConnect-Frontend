@@ -40,9 +40,14 @@ export default function RegisterPage() {
         throw new Error(data.error.message || "Registration failed");
       }
 
-      // Store token and user info
+      // Store token and user info with selected role
+      const userWithRole = { 
+        ...data.user, 
+        role: registerType === 'star' ? 'artist' : 'fan' 
+      };
+      
       localStorage.setItem("jwt", data.jwt);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("user", JSON.stringify(userWithRole));
 
       // Redirect based on type
       if (registerType === 'star') {

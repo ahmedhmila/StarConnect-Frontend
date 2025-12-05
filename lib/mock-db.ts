@@ -161,11 +161,8 @@ const initDB = () => {
     const exists = users.find((u: User) => u.username === currentUser.username);
     
     if (!exists) {
-      // Determine role based on some logic or default to fan
-      // If the user registered as 'star' in the UI, we might want to capture that, 
-      // but the Strapi response might not have it unless we customized the controller.
-      // For now, we'll default to 'fan' unless username is 'cameron'
-      const role = currentUser.username.toLowerCase().includes('cameron') ? 'artist' : 'fan';
+      // Determine role based on stored user object (from register page) or default
+      const role = currentUser.role || (currentUser.username.toLowerCase().includes('cameron') ? 'artist' : 'fan');
 
       const newUser: User = {
         id: currentUser.id?.toString() || 'u_' + Date.now(),
@@ -173,7 +170,7 @@ const initDB = () => {
         name: currentUser.username,
         avatar: `https://ui-avatars.com/api/?name=${currentUser.username}&background=random`,
         role: role,
-        bio: 'New member of the community.',
+        bio: role === 'artist' ? 'New Artist on StarConnect.' : 'New member of the community.',
       };
       users.push(newUser);
       localStorage.setItem('sc_users', JSON.stringify(users));
