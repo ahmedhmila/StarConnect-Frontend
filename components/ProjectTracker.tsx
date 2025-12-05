@@ -1,4 +1,4 @@
-import { Hammer, Droplets, GraduationCap, ArrowRight } from "lucide-react";
+ï»¿import { Hammer, Droplets, GraduationCap, ArrowRight } from "lucide-react";
 
 // This interface matches what we expect from Strapi later
 interface Project {
@@ -38,7 +38,7 @@ export default function ProjectTracker({ projects = [] }: { projects?: Project[]
     {
       id: 3,
       attributes: {
-        title: "Rénovation Lycée Bilingue",
+        title: "RÃ©novation LycÃ©e Bilingue",
         location: "Centre-Ville",
         status: "finishing",
         progress: 90,
@@ -58,7 +58,7 @@ export default function ProjectTracker({ projects = [] }: { projects?: Project[]
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case "starting": return "Démarrage / Starting";
+      case "starting": return "DÃ©marrage / Starting";
       case "ongoing": return "En cours / Ongoing";
       case "finishing": return "Finition / Finishing";
       default: return status;
@@ -115,4 +115,3 @@ export default function ProjectTracker({ projects = [] }: { projects?: Project[]
     </section>
   );
 }
-
