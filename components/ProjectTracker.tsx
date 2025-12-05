@@ -1,4 +1,4 @@
-﻿import { Hammer, Droplets, GraduationCap, ArrowRight } from "lucide-react";
+﻿import { Heart, Mic2, ShoppingBag, ArrowRight } from "lucide-react";
 
 // This interface matches what we expect from Strapi later
 interface Project {
@@ -6,61 +6,61 @@ interface Project {
   attributes: {
     title: string;
     location: string;
-    status: "starting" | "ongoing" | "finishing";
+    status: "live" | "upcoming" | "completed";
     progress: number;
-    type: "infrastructure" | "water" | "education";
+    type: "charity" | "tour" | "collab";
   };
 }
 
 export default function ProjectTracker({ projects = [] }: { projects?: Project[] }) {
-  // Fallback data if Strapi is empty (Cameroon Context)
+  // Fallback data if Strapi is empty
   const displayProjects = projects.length > 0 ? projects : [
     {
       id: 1,
       attributes: {
-        title: "Construction Route Principale",
-        location: "Quartier Commercial",
-        status: "ongoing",
-        progress: 75,
-        type: "infrastructure"
+        title: "National Charity Gala",
+        location: "Yaoundé Convention Center",
+        status: "upcoming",
+        progress: 0,
+        type: "charity"
       }
     },
     {
       id: 2,
       attributes: {
-        title: "Forage d'Eau Potable",
-        location: "Zone Nord",
-        status: "starting",
-        progress: 30,
-        type: "water"
+        title: "Summer Music Tour 2025",
+        location: "Douala, Buea, Garoua",
+        status: "live",
+        progress: 45,
+        type: "tour"
       }
     },
     {
       id: 3,
       attributes: {
-        title: "Rénovation Lycée Bilingue",
-        location: "Centre-Ville",
-        status: "finishing",
-        progress: 90,
-        type: "education"
+        title: "Exclusive Merch Drop",
+        location: "Online Store",
+        status: "completed",
+        progress: 100,
+        type: "collab"
       }
     }
   ];
 
   const getIcon = (type: string) => {
     switch (type) {
-      case "infrastructure": return <Hammer size={24} />;
-      case "water": return <Droplets size={24} />;
-      case "education": return <GraduationCap size={24} />;
-      default: return <Hammer size={24} />;
+      case "charity": return <Heart size={24} />;
+      case "tour": return <Mic2 size={24} />;
+      case "collab": return <ShoppingBag size={24} />;
+      default: return <Heart size={24} />;
     }
   };
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case "starting": return "Démarrage / Starting";
-      case "ongoing": return "En cours / Ongoing";
-      case "finishing": return "Finition / Finishing";
+      case "live": return "Live Now";
+      case "upcoming": return "Coming Soon";
+      case "completed": return "Sold Out / Done";
       default: return status;
     }
   };
@@ -71,14 +71,14 @@ export default function ProjectTracker({ projects = [] }: { projects?: Project[]
         <div className="flex flex-col md:flex-row justify-between items-end mb-10">
           <div>
             <h3 className="text-official-green font-bold uppercase tracking-widest text-sm mb-2">
-              Transparence / Transparency
+              Impact & Activities
             </h3>
             <h2 className="text-3xl font-serif font-bold text-official-dark">
-              Projets &amp; Chantiers <span className="text-official-red">en cours</span>
+              Active <span className="text-official-red">Campaigns</span>
             </h2>
           </div>
           <button className="text-official-green font-bold hover:underline mt-4 md:mt-0 flex items-center gap-2">
-            Voir tous les projets <ArrowRight size={16} />
+            View All Activities <ArrowRight size={16} />
           </button>
         </div>
 
@@ -98,15 +98,25 @@ export default function ProjectTracker({ projects = [] }: { projects?: Project[]
                 <h4 className="font-bold text-lg mb-1 text-official-dark">{attr.title}</h4>
                 <p className="text-xs text-gray-500 mb-4 uppercase">{attr.location}</p>
                 
-                <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
-                  <div 
-                    className="bg-official-green h-2.5 rounded-full transition-all duration-1000" 
-                    style={{ width: `${attr.progress}%` }}
-                  ></div>
-                </div>
-                <div className="text-right text-xs font-bold text-official-green">
-                  {attr.progress}% Completed
-                </div>
+                {attr.status === "live" && (
+                  <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                    <div 
+                      className="bg-official-green h-2.5 rounded-full transition-all duration-1000" 
+                      style={{ width: `${attr.progress}%` }}
+                    ></div>
+                    <div className="text-right text-xs font-bold text-official-green mt-1">
+                      {attr.progress}% Goal Reached
+                    </div>
+                  </div>
+                )}
+                
+                {attr.status === "upcoming" && (
+                   <div className="text-sm text-gray-500 italic">Tickets available soon</div>
+                )}
+
+                 {attr.status === "completed" && (
+                   <div className="text-sm text-official-red font-bold">Event Concluded</div>
+                )}
               </div>
             );
           })}

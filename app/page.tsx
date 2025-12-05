@@ -23,8 +23,8 @@ export default async function Home() {
       <Navbar /> 
 
       {/* HERO SECTION - CAMEROON COLORS */}
-      <section className="relative h-[85vh] flex items-center overflow-hidden bg-official-blue">
-        <div className="absolute inset-0 bg-gradient-to-br from-official-blue via-[#004080] to-black opacity-90 z-0"></div>
+      <section className="relative h-[85vh] flex items-center overflow-hidden bg-official-dark">
+        <div className="absolute inset-0 bg-gradient-to-br from-official-dark via-[#000000] to-black opacity-90 z-0"></div>
         {/* Pattern: African Geometric/Mudcloth simulation */}
         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')]"></div>
         
@@ -32,27 +32,27 @@ export default async function Home() {
           <div className="max-w-4xl animate-in slide-in-from-bottom-10 duration-1000 fade-in">
             <div className="flex items-center gap-3 mb-6">
               <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Flag_of_Cameroon.svg" className="h-6 w-auto shadow-sm" alt="Cmr Flag"/>
-              <span className="bg-official-gold text-official-blue font-bold px-4 py-1 rounded-full text-xs tracking-wider uppercase">
-                Portail Officiel / Official Portal
+              <span className="bg-official-gold text-official-dark font-bold px-4 py-1 rounded-full text-xs tracking-wider uppercase">
+                Official Personal Brand / Marque Personnelle
               </span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-serif font-bold mb-6 leading-tight">
-              Mairie de <br/>
+              The Official <br/>
               <span className="text-official-gold">StarConnect</span>
             </h1>
             
-            <p className="text-xl opacity-90 mb-10 font-light max-w-2xl leading-relaxed border-l-4 border-red-500 pl-6">
-              Développement Durable. Innovation. Proximité. <br/>
-              <span className="text-sm opacity-75 italic">Sustainable Development. Innovation. Proximity.</span>
+            <p className="text-xl opacity-90 mb-10 font-light max-w-2xl leading-relaxed border-l-4 border-official-gold pl-6">
+              Manage Your Image. Own Your Data. Unify Your Audience. <br/>
+              <span className="text-sm opacity-75 italic">Gérez votre image. Possédez vos données. Unifiez votre audience.</span>
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-official-gold text-official-blue px-8 py-4 rounded-lg font-bold text-lg hover:bg-white transition-colors shadow-lg">
-                Services en Ligne
+              <button className="bg-official-gold text-official-dark px-8 py-4 rounded-lg font-bold text-lg hover:bg-white transition-colors shadow-lg">
+                Visit My Store
               </button>
               <button className="border-2 border-white/30 bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white/20 transition-colors">
-                Communiqués Officiels
+                Official Statements
               </button>
             </div>
           </div>
@@ -69,9 +69,9 @@ export default async function Home() {
       <section className="container mx-auto px-6 py-20" id="news">
         <div className="flex flex-col lg:flex-row gap-16">
           <div className="lg:w-2/3">
-            <h3 className="text-3xl font-serif font-bold text-official-blue mb-10 flex items-center gap-4">
+            <h3 className="text-3xl font-serif font-bold text-official-dark mb-10 flex items-center gap-4">
               <span className="w-2 h-12 bg-official-gold rounded-full"></span>
-              Actualités & News
+              Latest Updates
             </h3>
 
             <div className="space-y-10">
@@ -81,15 +81,15 @@ export default async function Home() {
                   const attr = article.attributes || article;
                   const imageRaw = attr.coverImage?.data?.attributes || attr.coverImage;
                   const imageUrl = getStrapiMedia(imageRaw?.url);
-                  const department = attr.department || "Cabinet du Maire";
+                  const department = attr.department || "Official Team";
                   const isPremium = attr.category === "Exclusive";
 
                   return (
                     <article key={article.id} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-2xl transition-all duration-300 group relative overflow-hidden">
                       {/* PREMIUM BADGE */}
                       {isPremium && (
-                        <div className="absolute top-4 right-4 z-20 bg-official-gold text-official-blue font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-2 shadow-lg">
-                          <Lock size={12} /> Zone Réservée / VIP
+                        <div className="absolute top-4 right-4 z-20 bg-official-gold text-official-dark font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-2 shadow-lg">
+                          <Lock size={12} /> VIP / Exclusive
                         </div>
                       )}
 
@@ -100,7 +100,7 @@ export default async function Home() {
                           ) : (
                             <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-500">No Image</div>
                           )}
-                          <span className="absolute top-4 left-4 bg-official-blue text-white text-[10px] font-bold px-3 py-1 rounded-md uppercase shadow-lg">
+                          <span className="absolute top-4 left-4 bg-official-dark text-white text-[10px] font-bold px-3 py-1 rounded-md uppercase shadow-lg">
                             {attr.category || "General"}
                           </span>
                         </div>
