@@ -1,17 +1,54 @@
 "use client";
 
 import { useState } from "react";
-import { User, Lock, ArrowRight } from "lucide-react";
+import { User, Lock, ArrowRight, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate login delay
-    setTimeout(() => setIsLoading(false), 2000);
+    setError("");
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://starconnect-api-prod-a8bhddb7ccf7gugw.italynorth-01.azurewebsites.net";
+      
+      const res = await fetch(`${apiUrl}/api/auth/local`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          identifier,
+          password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.error) {
+        throw new Error(data.error.message || "Login failed");
+      }
+
+      // Store token and user info
+      localStorage.setItem("jwt", data.jwt);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      // Redirect to home
+      router.push("/");
+      
+    } catch (err: any) {
+      setError(err.message || "An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -35,6 +72,13 @@ export default function LoginPage() {
               <p className="text-gray-400 text-sm mt-2">Login to access exclusive content and drops.</p>
             </div>
 
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/50 text-red-500 p-3 rounded-lg text-sm flex items-center gap-2 mb-6">
+                <AlertCircle size={16} />
+                {error}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Email / Username</label>
@@ -43,8 +87,10 @@ export default function LoginPage() {
                     <User size={18} className="text-official-gold" />
                   </div>
                   <input 
-                    type="email" 
+                    type="text" 
                     required
+                    value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
                     className="block w-full pl-10 pr-3 py-3 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-official-gold focus:border-transparent transition-colors outline-none"
                     placeholder="fan@starconnect.cm"
                   />
@@ -60,6 +106,8 @@ export default function LoginPage() {
                   <input 
                     type="password" 
                     required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="block w-full pl-10 pr-3 py-3 bg-black/20 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-official-gold focus:border-transparent transition-colors outline-none"
                     placeholder="••••••••"
                   />

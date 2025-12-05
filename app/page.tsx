@@ -10,6 +10,8 @@ import ProjectTracker from "@/components/ProjectTracker";
 import SubscriptionTiers from "@/components/SubscriptionTiers";
 import TopFans from "@/components/TopFans";
 import CitizenVoice from "@/components/CitizenVoice";
+import StarAI from "@/components/StarAI";
+import LiveVibe from "@/components/LiveVibe";
 import { Twitter, Facebook, Linkedin, Lock, MessageCircle, Heart, MapPin } from "lucide-react";
 
 export default async function Home() {
@@ -20,12 +22,14 @@ export default async function Home() {
   return (
     <main className="min-h-screen bg-gray-50 flex flex-col font-sans">
       <Tracker />
+      <StarAI />
       
       {/* UPDATED NAVBAR */}
       <Navbar /> 
 
       {/* HERO SECTION - CAMEROON COLORS */}
       <section className="relative h-[85vh] flex items-center overflow-hidden bg-official-dark">
+        <LiveVibe />
         <div className="absolute inset-0 bg-gradient-to-br from-official-dark via-[#000000] to-black opacity-90 z-0"></div>
         {/* Pattern: African Geometric/Mudcloth simulation */}
         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')]"></div>
