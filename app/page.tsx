@@ -7,6 +7,8 @@ import Footer from "@/components/Footer";
 import Tracker from "@/components/Tracker";
 import ServiceGrid from "@/components/ServiceGrid";
 import ProjectTracker from "@/components/ProjectTracker";
+import SubscriptionTiers from "@/components/SubscriptionTiers";
+import TopFans from "@/components/TopFans";
 import CitizenVoice from "@/components/CitizenVoice";
 import { Twitter, Facebook, Linkedin, Lock, MessageCircle, Heart, MapPin } from "lucide-react";
 
@@ -65,6 +67,12 @@ export default async function Home() {
       {/* PROJECTS TRACKER - TRANSPARENCY */}
       <ProjectTracker />
 
+      {/* SUBSCRIPTION TIERS */}
+      <SubscriptionTiers />
+
+      {/* TOP FANS LEADERBOARD */}
+      <TopFans />
+
       {/* MAIN CONTENT */}
       <section className="container mx-auto px-6 py-20" id="news">
         <div className="flex flex-col lg:flex-row gap-16">
@@ -114,18 +122,28 @@ export default async function Home() {
                               </span>
                             </div>
                             
-                            <h4 className="text-2xl font-bold text-official-blue mb-3 leading-tight group-hover:text-official-gold transition-colors">
+                            <h4 className="text-2xl font-bold text-official-dark mb-3 leading-tight group-hover:text-official-gold transition-colors">
                               {attr.title}
                             </h4>
                             
-                            <div className={`text-gray-500 leading-relaxed mb-4 line-clamp-2 ${isPremium ? "blur-[3px] select-none opacity-60" : ""}`}>
-                              {typeof attr.content === "string" ? attr.content : (attr.content?.[0]?.children?.[0]?.text || "Lire le communiqué...")}
+                            <div className="relative">
+                              <div className={`text-gray-500 leading-relaxed mb-4 line-clamp-2 ${isPremium ? "blur-sm select-none opacity-50" : ""}`}>
+                                {typeof attr.content === "string" ? attr.content : (attr.content?.[0]?.children?.[0]?.text || "Read more...")}
+                              </div>
+                              
+                              {isPremium && (
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <button className="bg-official-gold text-official-dark font-bold text-xs px-4 py-2 rounded-full shadow-lg hover:scale-105 transition-transform flex items-center gap-2">
+                                    <Lock size={12} /> Unlock Post
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           </div>
                           
                           <div className="flex items-center justify-between border-t border-gray-100 pt-4 mt-auto">
                              <div className="flex gap-4 text-xs text-gray-400 font-bold">
-                              <span className="flex items-center gap-1 hover:text-official-blue cursor-pointer">
+                              <span className="flex items-center gap-1 hover:text-official-dark cursor-pointer">
                                 <MessageCircle size={14} /> {Math.floor(Math.random() * 40)}
                               </span>
                               <span className="flex items-center gap-1 hover:text-red-500 cursor-pointer">
@@ -135,8 +153,8 @@ export default async function Home() {
 
                             <div className="flex items-center gap-3">
                               {(!attr.syndicateToX && !attr.syndicateToFacebook && !attr.syndicateToLinkedIn) ? (
-                                 <div className="text-[10px] font-bold text-official-gold bg-official-blue px-2 py-1 rounded">
-                                   ★ Site Officiel Uniquement
+                                 <div className="text-[10px] font-bold text-official-gold bg-official-dark px-2 py-1 rounded">
+                                   ★ Exclusive
                                  </div>
                               ) : (
                                  <div className="flex gap-2">
