@@ -18,7 +18,7 @@ export default function ProjectTracker({ projects = [] }: { projects?: Project[]
     {
       id: 1,
       attributes: {
-        title: "National Charity Gala",
+        title: "Cameron's Charity Gala",
         location: "Yaoundé Convention Center",
         status: "upcoming",
         progress: 0,
@@ -28,7 +28,7 @@ export default function ProjectTracker({ projects = [] }: { projects?: Project[]
     {
       id: 2,
       attributes: {
-        title: "Summer Music Tour 2025",
+        title: "Cameron World Tour 2025",
         location: "Douala, Buea, Garoua",
         status: "live",
         progress: 45,
@@ -38,7 +38,7 @@ export default function ProjectTracker({ projects = [] }: { projects?: Project[]
     {
       id: 3,
       attributes: {
-        title: "Exclusive Merch Drop",
+        title: "Signature Collection Drop",
         location: "Online Store",
         status: "completed",
         progress: 100,
@@ -71,14 +71,14 @@ export default function ProjectTracker({ projects = [] }: { projects?: Project[]
         <div className="flex flex-col md:flex-row justify-between items-end mb-10">
           <div>
             <h3 className="text-official-green font-bold uppercase tracking-widest text-sm mb-2">
-              Impact & Activities
+              On The Road
             </h3>
             <h2 className="text-3xl font-serif font-bold text-official-dark">
-              Active <span className="text-official-red">Campaigns</span>
+              Upcoming <span className="text-official-red">Events</span>
             </h2>
           </div>
           <button className="text-official-green font-bold hover:underline mt-4 md:mt-0 flex items-center gap-2">
-            View All Activities <ArrowRight size={16} />
+            View All Events <ArrowRight size={16} />
           </button>
         </div>
 

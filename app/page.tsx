@@ -39,26 +39,26 @@ export default async function Home() {
             <div className="flex items-center gap-3 mb-6">
               <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Flag_of_Cameroon.svg" className="h-6 w-auto shadow-sm" alt="Cmr Flag"/>
               <span className="bg-official-gold text-official-dark font-bold px-4 py-1 rounded-full text-xs tracking-wider uppercase">
-                Official Personal Brand / Marque Personnelle
+                Cameron's Official Hub / Le Hub Officiel de Cameron
               </span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-serif font-bold mb-6 leading-tight">
-              The Official <br/>
-              <span className="text-official-gold">StarConnect</span>
+              Welcome to <br/>
+              <span className="text-official-gold">Cameron's World</span>
             </h1>
             
             <p className="text-xl opacity-90 mb-10 font-light max-w-2xl leading-relaxed border-l-4 border-official-gold pl-6">
-              Manage Your Image. Own Your Data. Unify Your Audience. <br/>
-              <span className="text-sm opacity-75 italic">Gérez votre image. Possédez vos données. Unifiez votre audience.</span>
+              Experience the music. Join the journey. Connect with Cameron. <br/>
+              <span className="text-sm opacity-75 italic">Vivez la musique. Rejoignez l'aventure. Connectez-vous avec Cameron.</span>
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
               <button className="bg-official-gold text-official-dark px-8 py-4 rounded-lg font-bold text-lg hover:bg-white transition-colors shadow-lg">
-                Visit My Store
+                Get Merch
               </button>
               <button className="border-2 border-white/30 bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-white/20 transition-colors">
-                Official Statements
+                Tour Dates
               </button>
             </div>
           </div>

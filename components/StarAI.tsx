@@ -52,7 +52,7 @@ export default function StarAI() {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 z-50 bg-official-gold text-official-dark p-4 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300 border-2 border-white/20 ${isOpen ? "hidden" : "flex"}`}
+        className={`fixed bottom-24 right-6 z-50 bg-official-gold text-official-dark p-4 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300 border-2 border-white/20 ${isOpen ? "hidden" : "flex"}`}
       >
         <MessageSquare size={28} fill="currentColor" />
         <span className="absolute -top-1 -right-1 flex h-3 w-3">
@@ -62,7 +62,7 @@ export default function StarAI() {
       </button>
 
       {/* Chat Window */}
-      <div className={`fixed bottom-6 right-6 z-50 w-80 md:w-96 bg-official-dark border border-official-gold/30 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 origin-bottom-right ${isOpen ? "scale-100 opacity-100" : "scale-0 opacity-0 pointer-events-none"}`}>
+      <div className={`fixed bottom-24 right-6 z-50 w-80 md:w-96 bg-official-dark border border-official-gold/30 rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 origin-bottom-right ${isOpen ? "scale-100 opacity-100" : "scale-0 opacity-0 pointer-events-none"}`}>
         {/* Header */}
         <div className="bg-gradient-to-r from-official-gold to-yellow-600 p-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
