@@ -11,7 +11,7 @@ const merriweather = Merriweather({
 });
 
 export const metadata: Metadata = {
-  title: "Mairie Connect - Official Portal",
+  title: "Star Connect - Official Portal",
   description: "Services en ligne et communication officielle.",
 };
 
