@@ -10,6 +10,8 @@ export default function ProfilePage() {
   const params = useParams();
   const username = params.username as string;
   const [user, setUser] = useState<User | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isFollowing, setIsFollowing] = useState(false);
   const [posts, setPosts] = useState<Post[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [activeTab, setActiveTab] = useState<'posts' | 'shop' | 'about'>('posts');
@@ -19,14 +21,37 @@ export default function ProfilePage() {
     db.init();
     
     const foundUser = db.users.getByUsername(username);
+    const loggedIn = db.users.getCurrent();
+    setCurrentUser(loggedIn);
+
     if (foundUser) {
       setUser(foundUser);
       setPosts(db.posts.getByAuthor(foundUser.id));
       if (foundUser.role === 'artist') {
         setProducts(db.products.getByArtist(foundUser.id));
       }
+      
+      if (loggedIn) {
+        setIsFollowing(loggedIn.following.includes(foundUser.id));
+      }
     }
   }, [username]);
+
+  const handleFollow = () => {
+    if (!currentUser || !user) return;
+    
+    if (isFollowing) {
+      db.users.unfollow(currentUser.id, user.id);
+      setIsFollowing(false);
+    } else {
+      db.users.follow(currentUser.id, user.id);
+      setIsFollowing(true);
+    }
+    
+    // Refresh user data
+    const updatedUser = db.users.getByUsername(username);
+    if (updatedUser) setUser(updatedUser);
+  };
 
   if (!user) {
     return (
@@ -80,9 +105,18 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex gap-3 mt-4 md:mt-0">
-            <button className="px-6 py-2 bg-white text-black font-bold rounded-full hover:bg-neutral-200 transition">
-              Follow
-            </button>
+            {currentUser && currentUser.id !== user.id && (
+              <button 
+                onClick={handleFollow}
+                className={`px-6 py-2 font-bold rounded-full transition ${
+                  isFollowing 
+                    ? 'bg-neutral-800 text-white border border-neutral-700 hover:bg-neutral-700' 
+                    : 'bg-white text-black hover:bg-neutral-200'
+                }`}
+              >
+                {isFollowing ? 'Following' : 'Follow'}
+              </button>
+            )}
             <button className="p-2 border border-neutral-700 rounded-full hover:bg-neutral-800 transition">
               <Share2 className="w-5 h-5 text-neutral-400" />
             </button>
