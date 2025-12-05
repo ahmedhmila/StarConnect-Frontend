@@ -10,16 +10,17 @@ const config: Config = {
     extend: {
       colors: {
         official: {
-          blue: '#003366', // Navy Blue
-          gold: '#D4AF37', // Gold
-          red: '#8B0000',  // Crisis Red
-          gray: '#F5F5F5', // Background Gray
+          green: '#007A33',  // Cameroon Flag Green (Primary)
+          yellow: '#FCD116', // Cameroon Flag Yellow (Secondary)
+          red: '#CE1126',    // Cameroon Flag Red (Accents/Crisis)
+          dark: '#1A1A1A',   // Text
+          light: '#F4F6F0',  // Background (Slightly warm grey)
         },
       },
       fontFamily: {
-        serif: ['var(--font-serif)', 'serif'],
-        sans: ['var(--font-inter)', 'sans-serif'],
-      },
+        sans: ['Inter', 'sans-serif'],
+        serif: ['Merriweather', 'serif'], // Official document look
+      }
     },
   },
   plugins: [],
