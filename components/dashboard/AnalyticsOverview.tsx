@@ -1,7 +1,8 @@
 "use client";
 
-import React from 'react';
-import { TrendingUp, Users, DollarSign, Eye, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { TrendingUp, Users, DollarSign, Eye, ArrowUpRight, ArrowDownRight, Heart } from 'lucide-react';
+import { db } from '@/lib/mock-db';
 
 const StatCard = ({ title, value, change, trend, icon: Icon }: any) => (
   <div className="bg-zinc-900/50 border border-zinc-800 p-6 rounded-xl backdrop-blur-sm">
@@ -20,12 +21,32 @@ const StatCard = ({ title, value, change, trend, icon: Icon }: any) => (
 );
 
 export default function AnalyticsOverview() {
-  const stats = [
-    { title: "Total Views", value: "2.4M", change: "+12.5%", trend: "up", icon: Eye },
-    { title: "Active Subscribers", value: "14.2K", change: "+8.1%", trend: "up", icon: Users },
-    { title: "Monthly Revenue", value: "$42.8K", change: "+23.4%", trend: "up", icon: DollarSign },
-    { title: "Engagement Rate", value: "18.2%", change: "-2.1%", trend: "down", icon: TrendingUp },
-  ];
+  const [stats, setStats] = useState([
+    { title: "Total Likes", value: "0", change: "+0%", trend: "up", icon: Heart },
+    { title: "Total Posts", value: "0", change: "+0%", trend: "up", icon: Eye },
+    { title: "Followers", value: "0", change: "+0%", trend: "up", icon: Users },
+    { title: "Est. Revenue", value: "$0", change: "+0%", trend: "up", icon: DollarSign },
+  ]);
+
+  useEffect(() => {
+    db.init();
+    const user = db.users.getCurrent();
+    if (user) {
+      const posts = db.posts.getByAuthor(user.id);
+      const totalLikes = posts.reduce((acc, post) => acc + post.likes, 0);
+      const followers = user.followers.length;
+      
+      // Simulate revenue based on likes/followers
+      const revenue = (followers * 50) + (totalLikes * 10);
+
+      setStats([
+        { title: "Total Likes", value: totalLikes.toLocaleString(), change: "+12.5%", trend: "up", icon: Heart },
+        { title: "Total Posts", value: posts.length.toString(), change: "+1", trend: "up", icon: Eye },
+        { title: "Followers", value: followers.toLocaleString(), change: "+5", trend: "up", icon: Users },
+        { title: "Est. Revenue", value: `$${revenue.toLocaleString()}`, change: "+23.4%", trend: "up", icon: DollarSign },
+      ]);
+    }
+  }, []);
 
   return (
     <div className="space-y-6">

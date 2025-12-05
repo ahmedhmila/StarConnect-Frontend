@@ -422,6 +422,17 @@ export const db = {
       // Dispatch event for real-time feel
       window.dispatchEvent(new Event('feedUpdated'));
       return newPost;
+    },
+    like: (postId: string) => {
+      const posts = db.posts.getAll();
+      const postIndex = posts.findIndex(p => p.id === postId);
+      if (postIndex !== -1) {
+        posts[postIndex].likes += 1;
+        localStorage.setItem('sc_posts', JSON.stringify(posts));
+        window.dispatchEvent(new Event('feedUpdated'));
+        return posts[postIndex].likes;
+      }
+      return 0;
     }
   },
   products: {
@@ -431,6 +442,15 @@ export const db = {
     },
     getByArtist: (artistId: string): Product[] => {
       return db.products.getAll().filter(p => p.artistId === artistId);
+    },
+    create: (product: Omit<Product, 'id'>) => {
+      const products = db.products.getAll();
+      const newProduct: Product = {
+        ...product,
+        id: 'prod' + Date.now(),
+      };
+      localStorage.setItem('sc_products', JSON.stringify([...products, newProduct]));
+      return newProduct;
     }
   }
 };

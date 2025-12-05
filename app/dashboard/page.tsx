@@ -10,10 +10,12 @@ import {
   LogOut, 
   Bell,
   Search,
-  Menu
+  Menu,
+  ShoppingBag
 } from 'lucide-react';
 import AnalyticsOverview from '@/components/dashboard/AnalyticsOverview';
 import SocialSyndicator from '@/components/dashboard/SocialSyndicator';
+import MerchManager from '@/components/dashboard/MerchManager';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -56,6 +58,7 @@ export default function DashboardPage() {
           {[
             { id: 'overview', label: 'Overview', icon: LayoutDashboard },
             { id: 'syndication', label: 'Social Syndication', icon: MessageSquare },
+            { id: 'merch', label: 'Merch Store', icon: ShoppingBag },
             { id: 'fans', label: 'Fan Management', icon: Users },
             { id: 'settings', label: 'Settings', icon: Settings },
           ].map((item) => (
@@ -162,6 +165,12 @@ export default function DashboardPage() {
             {activeTab === 'syndication' && (
               <div className="max-w-3xl mx-auto">
                 <SocialSyndicator />
+              </div>
+            )}
+
+            {activeTab === 'merch' && (
+              <div className="max-w-5xl mx-auto">
+                <MerchManager />
               </div>
             )}
 

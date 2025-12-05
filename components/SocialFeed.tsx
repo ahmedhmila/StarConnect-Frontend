@@ -46,6 +46,13 @@ export default function SocialFeed() {
     return new Date(timestamp).toLocaleDateString();
   };
 
+  const handleLike = (postId: string) => {
+    const newLikes = db.posts.like(postId);
+    setPosts(prev => prev.map(p => 
+      p.id === postId ? { ...p, likes: newLikes } : p
+    ));
+  };
+
   return (
     <div className="bg-white p-6 rounded-2xl border border-gray-100 h-full shadow-sm">
       <div className="flex items-center justify-between mb-8">
@@ -97,8 +104,11 @@ export default function SocialFeed() {
               )}
               
               <div className="flex items-center gap-4 pt-2 border-t border-gray-200/50">
-                <button className="flex items-center gap-1 text-xs text-gray-500 hover:text-official-red transition-colors">
-                  <Heart size={14} /> {post.likes}
+                <button 
+                  onClick={() => handleLike(post.id)}
+                  className="flex items-center gap-1 text-xs text-gray-500 hover:text-official-red transition-colors group/like"
+                >
+                  <Heart size={14} className="group-hover/like:fill-official-red" /> {post.likes}
                 </button>
                 <button className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-500 transition-colors">
                   <MessageCircle size={14} /> Comment
