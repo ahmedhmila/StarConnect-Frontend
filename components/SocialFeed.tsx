@@ -1,61 +1,49 @@
 "use client";
 import { Twitter, Facebook, Share2, Star, MessageCircle, Heart, Repeat } from "lucide-react";
 import { useEffect, useState } from "react";
+import { db, Post, User } from "@/lib/mock-db";
+import Link from "next/link";
+
+interface EnrichedPost extends Post {
+  author: User | undefined;
+}
 
 export default function SocialFeed() {
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<EnrichedPost[]>([]);
 
   useEffect(() => {
     // Load initial posts (mock + local storage)
     const loadPosts = () => {
-      const localPosts = JSON.parse(localStorage.getItem('fan_feed_posts') || '[]');
+      db.init();
+      const allPosts = db.posts.getAll();
       
-      const mockPosts = [
-        {
-          id: 'mock1',
-          author: "Cameron (Official)",
-          content: "We are proud to announce the new digital infrastructure project. Transparency is our priority. #Cameroon #Tech",
-          timestamp: new Date(Date.now() - 7200000).toISOString(), // 2h ago
-          platform: 'twitter',
-          likes: 1240,
-          shares: 450
-        },
-        {
-          id: 'mock2',
-          author: "Cameron Team",
-          content: "Visit our new shop to support local initiatives. Click the link in bio!",
-          timestamp: new Date(Date.now() - 18000000).toISOString(), // 5h ago
-          platform: 'facebook',
-          likes: 856,
-          shares: 120,
-          hasImage: true
-        }
-      ];
+      // Enrich with author data
+      const enriched = allPosts.map(post => ({
+        ...post,
+        author: db.users.getAll().find(u => u.id === post.authorId)
+      }));
 
-      // Merge and sort by date
-      const allPosts = [...localPosts, ...mockPosts].sort((a, b) => 
-        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-      );
+      // Sort by date
+      enriched.sort((a, b) => b.timestamp - a.timestamp);
       
-      setPosts(allPosts);
+      setPosts(enriched);
     };
 
     loadPosts();
 
     // Listen for updates from Dashboard
-    window.addEventListener('feedUpdated', loadPosts);
-    return () => window.removeEventListener('feedUpdated', loadPosts);
+    window.addEventListener("feedUpdated", loadPosts);
+    return () => window.removeEventListener("feedUpdated", loadPosts);
   }, []);
 
-  const formatTime = (isoString: string) => {
-    const date = new Date(isoString);
-    const now = new Date();
-    const diff = (now.getTime() - date.getTime()) / 1000; // seconds
+  const formatTime = (timestamp: number) => {
+    const now = Date.now();
+    const diff = (now - timestamp) / 1000; // seconds
 
-    if (diff < 60) return 'Just now';
+    if (diff < 60) return "Just now";
     if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
     if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-    return date.toLocaleDateString();
+    return new Date(timestamp).toLocaleDateString();
   };
 
   return (
@@ -66,7 +54,7 @@ export default function SocialFeed() {
           Live Feed
         </h3>
         <span className="text-xs bg-green-100 text-green-800 px-3 py-1 rounded-full font-bold animate-pulse">
-          ● Live Updates
+           Live Updates
         </span>
       </div>
 
@@ -82,47 +70,54 @@ export default function SocialFeed() {
             <div className="bg-gray-50 p-5 rounded-xl border border-gray-100 hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  {post.platform === 'twitter' && <Twitter size={16} className="text-black" />}
-                  {post.platform === 'facebook' && <Facebook size={16} className="text-blue-600" />}
-                  {!post.platform && <Star size={16} className="text-official-gold" />} {/* App exclusive */}
+                  <Star size={16} className="text-official-gold" />
                   
-                  <span className="font-bold text-sm text-official-dark">{post.author}</span>
-                  {post.author.includes("Official") && (
+                  <Link href={`/profile/${post.author?.username}`} className="font-bold text-sm text-official-dark hover:underline">
+                    {post.author?.name || "Unknown User"}
+                  </Link>
+                  {post.author?.role === "artist" && (
                     <span className="bg-blue-500 text-white text-[10px] px-1 rounded-full">✓</span>
                   )}
                 </div>
                 <span className="text-xs text-gray-400">{formatTime(post.timestamp)}</span>
               </div>
               
-              <p className="text-sm text-gray-700 leading-relaxed mb-3">
-                {post.content}
-              </p>
-              
-              {(post.hasImage || post.media) && (
-                <div className="mt-3 mb-3 h-40 bg-gray-200 rounded-lg overflow-hidden relative">
-                  <img 
-                    src={post.media === "uploaded" ? "https://placehold.co/600x400/D4AF37/000000?text=New+Post" : "https://placehold.co/600x400/1a1a1a/ffffff?text=Update"} 
-                    alt="Post attachment" 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+              {post.title && (
+                <h4 className="font-serif font-bold text-lg text-official-dark mb-2">{post.title}</h4>
               )}
 
-              <div className="flex items-center gap-6 text-gray-400 text-xs font-bold pt-2 border-t border-gray-200/50">
-                <button className="flex items-center gap-1 hover:text-red-500 transition-colors">
-                  <Heart size={14} /> {post.likes || 0}
+              <p className="text-sm text-gray-700 leading-relaxed mb-3 whitespace-pre-wrap">
+                {post.content}
+              </p>
+
+              {post.mediaUrl && (
+                <div className="mb-3 rounded-lg overflow-hidden border border-gray-200">
+                  <img src={post.mediaUrl} alt="Post media" className="w-full h-auto max-h-64 object-cover" />
+                </div>
+              )}
+              
+              <div className="flex items-center gap-4 pt-2 border-t border-gray-200/50">
+                <button className="flex items-center gap-1 text-xs text-gray-500 hover:text-official-red transition-colors">
+                  <Heart size={14} /> {post.likes}
                 </button>
-                <button className="flex items-center gap-1 hover:text-blue-500 transition-colors">
-                  <MessageCircle size={14} /> {Math.floor(Math.random() * 50)}
+                <button className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-500 transition-colors">
+                  <MessageCircle size={14} /> Comment
                 </button>
-                <button className="flex items-center gap-1 hover:text-green-500 transition-colors">
-                  <Repeat size={14} /> {post.shares || 0}
+                <button className="flex items-center gap-1 text-xs text-gray-500 hover:text-green-500 transition-colors ml-auto">
+                  <Repeat size={14} /> Share
                 </button>
               </div>
             </div>
           </div>
         ))}
+        
+        {posts.length === 0 && (
+          <div className="text-center text-gray-400 py-10">
+            No posts yet. Be the first to post!
+          </div>
+        )}
       </div>
     </div>
   );
 }
+"

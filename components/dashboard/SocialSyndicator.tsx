@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Send, Image as ImageIcon, Video, Hash, Globe, CheckCircle2, Upload } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Send, Image as ImageIcon, Video, Hash, Globe, CheckCircle2, Upload, X } from 'lucide-react';
+import { db } from '@/lib/mock-db';
 
 export default function SocialSyndicator() {
+  const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [platforms, setPlatforms] = useState({
     twitter: true,
@@ -15,42 +17,63 @@ export default function SocialSyndicator() {
   const [isPosting, setIsPosting] = useState(false);
   const [posted, setPosted] = useState(false);
   const [media, setMedia] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handlePost = async () => {
+    if (!content && !media) return;
+    
     setIsPosting(true);
     
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // If posting to Fan Feed, store in localStorage for demo
+    // If posting to Fan Feed, use our DB
     if (platforms.fanfeed) {
-      const newPost = {
-        id: Date.now(),
-        content,
-        media,
-        timestamp: new Date().toISOString(),
-        author: "Cameron (Official)"
-      };
+      // Get current user (assuming admin/star for this component)
+      // In a real app, this would come from auth context
+      const currentUser = db.users.getCurrent() || db.users.getByUsername('cameron');
       
-      const existing = JSON.parse(localStorage.getItem('fan_feed_posts') || '[]');
-      localStorage.setItem('fan_feed_posts', JSON.stringify([newPost, ...existing]));
-      
-      // Dispatch event so other components can update
-      window.dispatchEvent(new Event('feedUpdated'));
+      if (currentUser) {
+        db.posts.create({
+          authorId: currentUser.id,
+          title: title || undefined,
+          content,
+          mediaUrl: media || undefined,
+          mediaType: media ? 'image' : undefined, // Simplified for now, assumes image
+        });
+      }
     }
 
     setIsPosting(false);
     setPosted(true);
     setTimeout(() => {
       setPosted(false);
+      setTitle('');
       setContent('');
       setMedia(null);
     }, 3000);
   };
 
-  const handleMediaUpload = () => {
-    // Simulate upload
-    setMedia("uploaded");
+  const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setMedia(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
+  const removeMedia = () => {
+    setMedia(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   return (
@@ -88,72 +111,84 @@ export default function SocialSyndicator() {
         </div>
 
         {/* Content Area */}
-        <div className="relative">
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="What's happening in your world?"
-            className="w-full h-40 bg-zinc-950/50 border border-zinc-800 rounded-xl p-4 text-white placeholder-zinc-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/50 resize-none"
+        <div className="space-y-3">
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Post Title (Optional - for Articles)"
+            className="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl p-4 text-white placeholder-zinc-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/50"
           />
-          <div className="absolute bottom-3 right-3 text-xs text-zinc-500">
-            {content.length} chars
+          <div className="relative">
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="What's happening in your world?"
+              className="w-full h-40 bg-zinc-950/50 border border-zinc-800 rounded-xl p-4 text-white placeholder-zinc-600 focus:outline-none focus:border-amber-500/50 focus:ring-1 focus:ring-amber-500/50 resize-none"
+            />
+            <div className="absolute bottom-3 right-3 text-xs text-zinc-500">
+              {content.length} chars
+            </div>
           </div>
         </div>
 
         {/* Media Preview */}
         {media && (
-          <div className="bg-zinc-800/50 rounded-lg p-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-zinc-700 rounded flex items-center justify-center">
-                <ImageIcon className="w-5 h-5 text-zinc-400" />
-              </div>
-              <span className="text-sm text-zinc-300">media_upload_v1.jpg</span>
-            </div>
-            <button onClick={() => setMedia(null)} className="text-zinc-500 hover:text-red-400">Remove</button>
+          <div className="relative w-full h-48 bg-zinc-950 rounded-xl overflow-hidden border border-zinc-800 group">
+            <img src={media} alt="Preview" className="w-full h-full object-cover" />
+            <button 
+              onClick={removeMedia}
+              className="absolute top-2 right-2 p-1 bg-black/50 text-white rounded-full hover:bg-red-500 transition"
+            >
+              <X size={16} />
+            </button>
           </div>
         )}
 
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          onChange={handleMediaUpload} 
+          accept="image/*" 
+          className="hidden" 
+        />
+
         {/* Actions */}
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between pt-4 border-t border-zinc-800">
           <div className="flex gap-2">
             <button 
-              onClick={handleMediaUpload}
-              className="p-2 text-zinc-400 hover:text-amber-500 hover:bg-amber-500/10 rounded-lg transition-colors relative group"
+              onClick={triggerFileInput}
+              className="p-2 text-zinc-400 hover:text-amber-500 hover:bg-amber-500/10 rounded-lg transition"
+              title="Add Image"
             >
-              <ImageIcon className="w-5 h-5" />
-              <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Add Photo</span>
+              <ImageIcon size={20} />
             </button>
-            <button className="p-2 text-zinc-400 hover:text-amber-500 hover:bg-amber-500/10 rounded-lg transition-colors">
-              <Video className="w-5 h-5" />
+            <button className="p-2 text-zinc-400 hover:text-amber-500 hover:bg-amber-500/10 rounded-lg transition">
+              <Video size={20} />
             </button>
-            <button className="p-2 text-zinc-400 hover:text-amber-500 hover:bg-amber-500/10 rounded-lg transition-colors">
-              <Hash className="w-5 h-5" />
+            <button className="p-2 text-zinc-400 hover:text-amber-500 hover:bg-amber-500/10 rounded-lg transition">
+              <Hash size={20} />
             </button>
           </div>
 
           <button
             onClick={handlePost}
-            disabled={!content || isPosting || posted}
-            className={`
-              flex items-center gap-2 px-6 py-2.5 rounded-lg font-medium transition-all
-              ${posted 
-                ? 'bg-green-500/20 text-green-500 cursor-default' 
-                : 'bg-amber-500 hover:bg-amber-400 text-black shadow-lg shadow-amber-500/20'
-              }
-              disabled:opacity-50 disabled:cursor-not-allowed
-            `}
+            disabled={isPosting || (!content && !media)}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-full font-bold transition-all ${
+              posted 
+                ? 'bg-green-500 text-white' 
+                : 'bg-white text-black hover:bg-amber-500 hover:text-white'
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
           >
-            {isPosting ? (
-              <span className="animate-pulse">Broadcasting...</span>
-            ) : posted ? (
+            {posted ? (
               <>
-                <CheckCircle2 className="w-4 h-4" />
-                Sent!
+                <CheckCircle2 size={18} />
+                Posted!
               </>
             ) : (
               <>
-                <Send className="w-4 h-4" />
-                Broadcast
+                <Send size={18} />
+                {isPosting ? 'Publishing...' : 'Publish Post'}
               </>
             )}
           </button>

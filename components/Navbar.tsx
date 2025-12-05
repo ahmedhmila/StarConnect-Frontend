@@ -61,7 +61,7 @@ export default function Navbar() {
           {user ? (
             <div className="flex items-center gap-4">
               {/* User Info */}
-              <div className="flex items-center gap-3 bg-white/5 px-4 py-1.5 rounded-full border border-white/10">
+              <Link href={`/profile/${user.username}`} className="flex items-center gap-3 bg-white/5 px-4 py-1.5 rounded-full border border-white/10 hover:bg-white/10 transition cursor-pointer">
                 <div className={`w-2 h-2 rounded-full ${isStar ? "bg-amber-500 animate-pulse" : "bg-green-500"}`}></div>
                 <div className="text-right hidden sm:block">
                   <p className="text-xs font-bold text-white leading-none">{user.username}</p>
@@ -70,7 +70,7 @@ export default function Navbar() {
                   </p>
                 </div>
                 {isStar ? <Crown size={16} className="text-amber-500" /> : <Star size={16} className="text-official-gold" />}
-              </div>
+              </Link>
 
               {/* Dashboard Link (Star Only) */}
               {isStar && (

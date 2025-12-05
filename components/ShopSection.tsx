@@ -1,31 +1,16 @@
 "use client";
 import { ShoppingCart, Star, Tag } from "lucide-react";
-
-const PRODUCTS = [
-  { 
-    id: 1, 
-    name: "Signature Hoodie - Black/Gold", 
-    price: "25,000 FCFA", 
-    image: "https://placehold.co/400x400/1a1a1a/D4AF37?text=Hoodie",
-    tag: "Best Seller"
-  },
-  { 
-    id: 2, 
-    name: "Cameron World Tour Tee", 
-    price: "10,000 FCFA", 
-    image: "https://placehold.co/400x400/ffffff/000000?text=T-Shirt",
-    tag: "Limited Edition"
-  },
-  { 
-    id: 3, 
-    name: "VIP Access Pass (Digital)", 
-    price: "50,000 FCFA", 
-    image: "https://placehold.co/400x400/D4AF37/000000?text=VIP+Pass",
-    tag: "Exclusive"
-  },
-];
+import { db, Product } from "@/lib/mock-db";
+import { useEffect, useState } from "react";
 
 export default function ShopSection() {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    db.init();
+    setProducts(db.products.getAll());
+  }, []);
+
   const handleBuy = (item: string) => {
     // Simulation logic
     alert(`Initiating Mobile Money payment for: ${item}\n\nProvider: MTN/Orange Money\nStatus: Pending Confirmation...`);
@@ -51,7 +36,7 @@ export default function ShopSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {PRODUCTS.map((product) => (
+          {products.map((product) => (
             <div key={product.id} className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
               <div className="aspect-[4/5] bg-gray-100 relative overflow-hidden">
                 <img src={product.image} alt={product.name} className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700" />
@@ -59,7 +44,7 @@ export default function ShopSection() {
                 {/* Tag */}
                 <div className="absolute top-4 left-4 bg-official-dark/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
                   <Tag size={12} className="text-official-gold" />
-                  {product.tag}
+                  Official
                 </div>
 
                 {/* Overlay Action */}
@@ -84,7 +69,7 @@ export default function ShopSection() {
                     <Star size={12} fill="currentColor" />
                   </div>
                 </div>
-                <p className="text-xl font-bold text-gray-900">{product.price}</p>
+                <p className="text-xl font-bold text-gray-900">{product.price.toLocaleString()} FCFA</p>
               </div>
             </div>
           ))}
